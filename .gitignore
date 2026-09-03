@@ -1,0 +1,4 @@
+.env
+public/session.json
+protean-gateway-public-key.pem
+*.log

@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Account Opening — ICICI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap">
+<style>
+  :root{
+    --ground:#eef1f5; --panel:#fff; --sunk:#f5f7fa; --rail:#1b2432;
+    --ink:#151b24; --ink-2:#414c5c; --muted:#6d7889;
+    --line:#dde2e9; --line-2:#eaeef3;
+    --accent:#7a4bd0; --accent-soft:#efe9fb;
+    --ok:#1c7a4d; --ok-soft:#e3f3ea;
+    --warn:#8a5a12; --warn-soft:#fbf1dd;
+    --stop:#a02e22; --stop-soft:#fbe7e4;
+    --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+    --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  }
+  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+    --ground:#0d1117; --panel:#161c24; --sunk:#1c232c; --rail:#10151c;
+    --ink:#e9edf2; --ink-2:#bcc5d1; --muted:#8994a3;
+    --line:#28313d; --line-2:#212932;
+    --accent:#a98af0; --accent-soft:#241c3a;
+    --ok:#5cbe8a; --ok-soft:#12291d;
+    --warn:#d9a441; --warn-soft:#2c2413;
+    --stop:#e0847a; --stop-soft:#301a17;
+  }}
+  :root[data-theme="dark"]{
+    --ground:#0d1117; --panel:#161c24; --sunk:#1c232c; --rail:#10151c;
+    --ink:#e9edf2; --ink-2:#bcc5d1; --muted:#8994a3;
+    --line:#28313d; --line-2:#212932;
+    --accent:#a98af0; --accent-soft:#241c3a;
+    --ok:#5cbe8a; --ok-soft:#12291d;
+    --warn:#d9a441; --warn-soft:#2c2413;
+    --stop:#e0847a; --stop-soft:#301a17;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ground);color:var(--ink);font:14px/1.55 var(--sans)}
+  header.top{background:var(--rail);color:#fff;padding:12px 22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .brand{font-weight:700;font-size:15px;letter-spacing:-.01em}
+  .brand span{opacity:.62;font-weight:500}
+  .spacer{flex:1}
+  .who{font:500 11.5px/1 var(--mono);opacity:.72}
+  main{max-width:1240px;margin:22px auto;padding:0 22px;display:grid;grid-template-columns:minmax(0,1fr) 348px;gap:22px;align-items:start}
+  @media (max-width:1000px){main{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;margin-bottom:18px;overflow:hidden}
+  .card > h2{font-size:14px;font-weight:650;margin:0;padding:13px 18px;border-bottom:1px solid var(--line-2);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .card .body{padding:16px 18px}
+  .stepno{width:22px;height:22px;border-radius:50%;background:var(--accent);color:#fff;font:600 11px/22px var(--mono);text-align:center;flex:none}
+  .stepno.done{background:var(--ok)}
+  .maps{font:500 10.5px/1 var(--mono);color:var(--muted);margin-left:auto;text-align:right}
+  .maps b{color:var(--accent);font-weight:600}
+  .why{color:var(--muted);font-size:13px;margin:0 0 14px;max-width:66ch}
+  label{display:block;font:600 11px/1 var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+  input,select{font:14px var(--sans);padding:9px 11px;border:1px solid var(--line);border-radius:7px;background:var(--sunk);color:var(--ink);width:100%}
+  input:focus,select:focus{outline:2px solid var(--accent);outline-offset:1px}
+  .row{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end}
+  .row > div{flex:1;min-width:180px}
+  button{font:600 13px var(--sans);padding:9px 16px;border-radius:7px;border:1px solid var(--line);background:var(--panel);color:var(--ink);cursor:pointer;white-space:nowrap}
+  button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+  button:disabled{opacity:.45;cursor:not-allowed}
+  button:not(:disabled):hover{filter:brightness(.96)}
+  .out{margin-top:14px;font-size:13px}
+  .kv{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;font-size:13px}
+  .kv dt{color:var(--muted)}
+  .kv dd{margin:0;font-weight:500}
+  .banner{padding:10px 13px;border-radius:7px;font-size:13px;margin-bottom:12px}
+  .b-ok{background:var(--ok-soft);color:var(--ok)}
+  .b-warn{background:var(--warn-soft);color:var(--warn)}
+  .b-stop{background:var(--stop-soft);color:var(--stop)}
+  .b-stop b,.b-warn b,.b-ok b{font-weight:650}
+  .docs{display:flex;flex-direction:column;gap:8px}
+  .doc{display:flex;align-items:center;gap:11px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;background:var(--sunk)}
+  .doc .t{font-weight:600;font-size:13px}
+  .doc .s{color:var(--muted);font-size:12px}
+  .doc .grow{flex:1;min-width:0}
+  aside .card .body{padding:14px 16px}
+  .meter{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px solid var(--line-2);font-size:13px}
+  .meter:last-child{border-bottom:0}
+  .meter .m{font:500 12px var(--mono);color:var(--ink-2);min-width:0;overflow:hidden;text-overflow:ellipsis}
+  .meter .c{font-weight:650;font-variant-numeric:tabular-nums}
+  .meter.zero .m,.meter.zero .c{color:var(--muted);font-weight:400}
+  .log{max-height:290px;overflow:auto;font:12px/1.5 var(--mono)}
+  .log div{padding:6px 0;border-bottom:1px solid var(--line-2);display:flex;gap:8px}
+  .log div:last-child{border-bottom:0}
+  .log .st{font-weight:600;flex:none}
+  .s2{color:var(--ok)} .s4{color:var(--stop)} .s5{color:var(--stop)}
+  .empty{color:var(--muted);font-size:13px;padding:6px 0}
+  .hint{font-size:12px;color:var(--muted);margin-top:8px}
+  .note{background:var(--accent-soft);border-left:3px solid var(--accent);padding:9px 12px;border-radius:0 6px 6px 0;font-size:12.5px;color:var(--ink-2);margin-top:14px}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="brand">ICICI <span>· Account Opening</span></div>
+  <div class="spacer"></div>
+  <div class="who" id="who">loading session…</div>
+</header>
+
+<main>
+  <section>
+    <div id="setup" class="card" style="display:none">
+      <h2>Setup required</h2>
+      <div class="body"><div id="setupMsg" class="banner b-stop"></div></div>
+    </div>
+
+    <!-- 1 -->
+    <div class="card">
+      <h2><span class="stepno" id="n1">1</span> Verify the applicant's identity
+        <span class="maps">Protean <b>Aadhaar eKYC</b><br>bills <b>ekyc_otp_sent</b> + <b>ekyc_verifications</b></span></h2>
+      <div class="body">
+        <p class="why">An OTP goes to the mobile registered against the applicant's Aadhaar. Entering it returns their name, date of birth and address straight from the source, so the branch never keys those in by hand.</p>
+        <div class="row">
+          <div><label for="aadhaar">Aadhaar number</label><input id="aadhaar" placeholder="12 digits" value="999000100009" maxlength="12" inputmode="numeric"></div>
+          <button class="primary" id="btnOtp">Send OTP</button>
+        </div>
+        <div class="row" id="otpRow" style="margin-top:12px;display:none">
+          <div><label for="otp">OTP from applicant</label><input id="otp" placeholder="6 digits" value="123456" maxlength="6" inputmode="numeric"></div>
+          <button class="primary" id="btnVerify">Verify identity</button>
+        </div>
+        <div class="out" id="out1"></div>
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="card">
+      <h2><span class="stepno" id="n2">2</span> Confirm PAN and its Aadhaar link
+        <span class="maps">Protean <b>PAN Verification</b><br>bills <b>pan_verifications</b> + <b>pan_link_checks</b></span></h2>
+      <div class="body">
+        <p class="why">Two separate questions. Is the PAN real and active, and is it seeded against this Aadhaar? An account cannot open on a surrendered PAN, and an unlinked one has to be resolved before the first tax report.</p>
+        <div class="row">
+          <div><label for="pan">PAN</label><input id="pan" placeholder="ABCDE1234F" value="AKRPK4417J" maxlength="10" style="text-transform:uppercase"></div>
+          <button id="btnPan">Verify PAN</button>
+          <button id="btnLink">Check Aadhaar link</button>
+        </div>
+        <div class="out" id="out2"></div>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="card">
+      <h2><span class="stepno" id="n3">3</span> Collect supporting documents
+        <span class="maps">Protean <b>DigiLocker</b><br>bills <b>documents_fetched</b></span></h2>
+      <div class="body">
+        <p class="why">Listing what the applicant holds is free. Each document you actually pull is billed and separately consented — agreeing to share a PAN card is not agreeing to share a driving licence.</p>
+        <div class="row"><button id="btnDocs">List available documents</button></div>
+        <div class="out" id="out3"></div>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="card">
+      <h2><span class="stepno" id="n4">4</span> Sign the account opening form
+        <span class="maps">Protean <b>Aadhaar eSign</b><br>bills <b>esign_requests</b></span></h2>
+      <div class="body">
+        <p class="why">Only the document's SHA-256 leaves the bank. Protean signs the hash, never sees the form, and returns a signature ICICI stores against the application.</p>
+        <div class="row">
+          <div><label for="docName">Document</label>
+            <select id="docName">
+              <option>ICICI-Savings-Account-Application.pdf</option>
+              <option>ICICI-Nomination-Form.pdf</option>
+              <option>ICICI-Terms-Acceptance.pdf</option>
+            </select></div>
+          <button id="btnSignInit">Send signing OTP</button>
+        </div>
+        <div class="row" id="signRow" style="margin-top:12px;display:none">
+          <div><label for="signOtp">OTP from applicant</label><input id="signOtp" value="123456" maxlength="6" inputmode="numeric"></div>
+          <button class="primary" id="btnSign">Complete signature</button>
+        </div>
+        <div class="out" id="out4"></div>
+      </div>
+    </div>
+  </section>
+
+  <aside>
+    <div class="card">
+      <h2>Billable usage this session</h2>
+      <div class="body">
+        <div id="meters"></div>
+        <div class="note">Counted here for your own reconciliation. ICICI writes no metering code — Protean's gateway meters every call and reports it to Aforo, which is what the invoice is built from.</div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>API calls</h2>
+      <div class="body"><div class="log" id="log"><div class="empty">No calls yet.</div></div></div>
+    </div>
+  </aside>
+</main>
+
+<script>
+const S = { cfg:null, txn:null, signTxn:null, aadhaar:null, counts:{} };
+const METRICS = ['ekyc_otp_sent','ekyc_verifications','demographic_matches','pan_verifications','pan_link_checks','esign_requests','documents_fetched'];
+const $ = (id) => document.getElementById(id);
+
+function renderMeters(){
+  $('meters').innerHTML = METRICS.map(m=>{
+    const n = S.counts[m]||0;
+    return `<div class="meter${n?'':' zero'}"><span class="m">${m}</span><span class="c">${n}</span></div>`;
+  }).join('');
+}
+function bill(metric){ S.counts[metric]=(S.counts[metric]||0)+1; renderMeters(); }
+
+function logCall(method, path, status){
+  const el = $('log');
+  if (el.querySelector('.empty')) el.innerHTML='';
+  const cls = status>=500?'s5':status>=400?'s4':'s2';
+  const row = document.createElement('div');
+  row.innerHTML = `<span class="st ${cls}">${status||'ERR'}</span><span>${method} ${path}</span>`;
+  el.prepend(row);
+}
+
+/* Every call goes to Protean's gateway. The gateway authenticates ICICI,
+   forwards the verified identity to Protean, and meters the call for Aforo. */
+async function callProtean(method, path, body){
+  if (!S.cfg) return { ok:false, status:0, body:{ message:'Session not loaded.' } };
+  let res;
+  try{
+    res = await fetch(S.cfg.gatewayUrl + path, {
+      method,
+      headers: { 'Content-Type':'application/json', 'Authorization':`Bearer ${S.cfg.token}` },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+  }catch(e){
+    logCall(method, path, 0);
+    return { ok:false, status:0, body:{ message:`Could not reach Protean's gateway at ${S.cfg.gatewayUrl}. ${e.message}` } };
+  }
+  const text = await res.text();
+  let parsed; try{ parsed = JSON.parse(text); }catch{ parsed = { message:text }; }
+  logCall(method, path, res.status);
+  return { ok:res.ok, status:res.status, body:parsed };
+}
+
+/* Protean returns errorCode + message + resolution. Show the resolution: it is
+   written for the person on the phone to the applicant, not for a developer. */
+function problem(el, r){
+  const b = r.body||{};
+  el.innerHTML = `<div class="banner b-stop"><b>${b.message||'The request failed.'}</b>${b.resolution?`<br>${b.resolution}`:''}${b.errorCode?`<br><span style="font:500 11.5px var(--mono);opacity:.8">${b.errorCode}</span>`:''}</div>`;
+}
+function done(n){ const e=$('n'+n); e.classList.add('done'); e.textContent='✓'; }
+
+$('btnOtp').onclick = async () => {
+  const el=$('out1'); el.innerHTML='';
+  const aadhaar=$('aadhaar').value.trim();
+  const r = await callProtean('POST','/ekyc/v1/otp',{ aadhaar, consent:'Y' });
+  if(!r.ok) return problem(el,r);
+  bill('ekyc_otp_sent'); S.txn=r.body.txnId; S.aadhaar=aadhaar;
+  $('otpRow').style.display='flex';
+  el.innerHTML = `<div class="banner b-ok">OTP sent to ${r.body.maskedMobile}. Valid for ${Math.round(r.body.validForSeconds/60)} minutes.</div>`;
+};
+
+$('btnVerify').onclick = async () => {
+  const el=$('out1');
+  const r = await callProtean('POST','/ekyc/v1/verify',{ txnId:S.txn, otp:$('otp').value.trim() });
+  if(!r.ok) return problem(el,r);
+  bill('ekyc_verifications'); done(1);
+  const k=r.body.kyc, a=k.address;
+  el.innerHTML = `<div class="banner b-ok">Identity verified from the Aadhaar record.</div>
+    <dl class="kv">
+      <dt>Name</dt><dd>${k.name}</dd>
+      <dt>Date of birth</dt><dd>${k.dateOfBirth}</dd>
+      <dt>Aadhaar</dt><dd>${k.aadhaarMasked}</dd>
+      <dt>Mobile</dt><dd>${k.mobileMasked}</dd>
+      <dt>Address</dt><dd>${a.house}, ${a.street}, ${a.locality}<br>${a.district}, ${a.state} ${a.pincode}</dd>
+    </dl>
+    <div class="hint">Only the last four digits of the Aadhaar are returned. ICICI never receives or stores the full number.</div>`;
+};
+
+$('btnPan').onclick = async () => {
+  const el=$('out2'); el.innerHTML='';
+  const r = await callProtean('POST','/pan/v1/verify',{ pan:$('pan').value.trim().toUpperCase() });
+  if(!r.ok) return problem(el,r);
+  bill('pan_verifications');
+  const ok = r.body.status==='VALID';
+  if(ok) done(2);
+  el.innerHTML = `<div class="banner ${ok?'b-ok':'b-warn'}">
+      PAN status: <b>${r.body.status}</b>${ok?'':' — this PAN cannot be used to open an account.'}</div>
+    <dl class="kv">
+      <dt>Registered name</dt><dd>${r.body.registeredName}</dd>
+      <dt>Holder type</dt><dd>${r.body.holderType||'—'}</dd>
+      <dt>Aadhaar seeded</dt><dd>${r.body.aadhaarSeeded?'Yes':'No'}</dd>
+      <dt>Last updated</dt><dd>${r.body.lastUpdated}</dd>
+    </dl>`;
+};
+
+$('btnLink').onclick = async () => {
+  const el=$('out2');
+  const r = await callProtean('POST','/pan/v1/link-status',{ pan:$('pan').value.trim().toUpperCase(), aadhaar:$('aadhaar').value.trim() });
+  if(!r.ok) return problem(el,r);
+  bill('pan_link_checks');
+  el.innerHTML += `<div class="banner ${r.body.linked?'b-ok':'b-warn'}" style="margin-top:12px">
+    ${r.body.linked?'PAN and Aadhaar are linked.':'Not linked.'} ${r.body.reason}</div>`;
+};
+
+$('btnDocs').onclick = async () => {
+  const el=$('out3'); el.innerHTML='';
+  if(!S.aadhaar) return el.innerHTML = `<div class="banner b-warn">Verify the applicant's identity in step 1 first — the document list is keyed on their Aadhaar.</div>`;
+  const r = await callProtean('GET',`/digilocker/v1/documents?aadhaar=${encodeURIComponent(S.aadhaar)}`);
+  if(!r.ok) return problem(el,r);
+  if(!r.body.documentCount) return el.innerHTML = `<div class="banner b-warn">This applicant holds no documents in DigiLocker.</div>`;
+  el.innerHTML = `<div class="hint" style="margin:0 0 10px">Listing is free. Each fetch is billed and separately consented.</div>
+    <div class="docs">${r.body.documents.map(d=>`
+      <div class="doc"><div class="grow"><div class="t">${d.docType.replace(/_/g,' ')}</div>
+        <div class="s">${d.issuer} · issued ${d.issuedOn} · ${(d.sizeBytes/1024).toFixed(0)} KB</div></div>
+        <button data-doc="${d.docId}">Fetch</button></div>`).join('')}</div>`;
+  el.querySelectorAll('button[data-doc]').forEach(b=>{
+    b.onclick = async () => {
+      b.disabled=true; b.textContent='Fetching…';
+      const f = await callProtean('POST','/digilocker/v1/fetch',{ aadhaar:S.aadhaar, docId:b.dataset.doc, consent:'Y' });
+      if(!f.ok){ b.disabled=false; b.textContent='Fetch'; return problem(el,f); }
+      bill('documents_fetched'); done(3);
+      b.textContent='Collected'; b.style.color='var(--ok)';
+    };
+  });
+};
+
+$('btnSignInit').onclick = async () => {
+  const el=$('out4'); el.innerHTML='';
+  if(!S.aadhaar) return el.innerHTML = `<div class="banner b-warn">Verify the applicant's identity in step 1 first — the signature is bound to their Aadhaar.</div>`;
+  const name=$('docName').value;
+  // The document never leaves the bank; only its digest is sent.
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(name+'|'+S.aadhaar));
+  const hash = [...new Uint8Array(digest)].map(b=>b.toString(16).padStart(2,'0')).join('');
+  const r = await callProtean('POST','/esign/v1/initiate',{ aadhaar:S.aadhaar, documentHash:hash, documentName:name, signerConsent:'Y' });
+  if(!r.ok) return problem(el,r);
+  S.signTxn=r.body.txnId; $('signRow').style.display='flex';
+  el.innerHTML = `<div class="banner b-ok">Signing OTP sent to ${r.body.signerMobileMasked}.</div>
+    <div class="hint">Document hash sent: <span style="font-family:var(--mono)">${hash.slice(0,32)}…</span></div>`;
+};
+
+$('btnSign').onclick = async () => {
+  const el=$('out4');
+  const r = await callProtean('POST','/esign/v1/complete',{ txnId:S.signTxn, otp:$('signOtp').value.trim() });
+  if(!r.ok) return problem(el,r);
+  bill('esign_requests'); done(4);
+  el.innerHTML = `<div class="banner b-ok">Signed. The application is complete.</div>
+    <dl class="kv">
+      <dt>Signer</dt><dd>${r.body.signer.name} (${r.body.signer.aadhaarMasked})</dd>
+      <dt>Document</dt><dd>${r.body.documentName}</dd>
+      <dt>Signed at</dt><dd>${new Date(r.body.signedAt).toLocaleString()}</dd>
+      <dt>Algorithm</dt><dd>${r.body.signatureAlgorithm}</dd>
+      <dt>Certificate</dt><dd style="font:500 12px var(--mono);word-break:break-all">${r.body.certificate.serialNumber}</dd>
+    </dl>`;
+};
+
+renderMeters();
+fetch('session.json').then(r=>r.json()).then(cfg=>{
+  S.cfg=cfg;
+  $('who').textContent = `customer ${cfg.customerId} · gateway ${cfg.gatewayUrl}`;
+}).catch(()=>{
+  $('setup').style.display='block';
+  $('setupMsg').innerHTML = `<b>No session found.</b><br>Run <span style="font-family:var(--mono)">node scripts/generate-session.js</span> to mint ICICI's access token, then reload. Until then no call can be authenticated and nothing will be metered.`;
+  $('who').textContent='no session';
+});
+</script>
+</body>
+</html>

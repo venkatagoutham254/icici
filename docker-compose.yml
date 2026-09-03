@@ -1,0 +1,13 @@
+# ICICI's account-opening console.
+#
+# Serves a static page only. It holds no server of its own because it has no
+# server-side work: every action is a call to Protean's gateway, and the gateway
+# is what authenticates ICICI and meters the call.
+services:
+  icici-console:
+    image: nginx:alpine
+    container_name: icici-console
+    volumes:
+      - ./public:/usr/share/nginx/html:ro
+    ports:
+      - "${CONSOLE_PORT:-4000}:80"
