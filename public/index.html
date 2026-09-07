@@ -221,7 +221,12 @@ async function callProtean(method, path, body){
   try{
     res = await fetch(S.cfg.gatewayUrl + path, {
       method,
-      headers: { 'Content-Type':'application/json', 'Authorization':`Bearer ${S.cfg.token}` },
+      /* X-API-Key, not Authorization: Bearer. The gateway's key-auth plugin is
+         configured with key_names ["X-API-Key","apikey"] and does not look at
+         the Authorization header at all, so a bearer token there is ignored and
+         every call returns 401 with nothing in the body explaining which
+         credential was missing. */
+      headers: { 'Content-Type':'application/json', 'X-API-Key': S.cfg.apiKey },
       body: body ? JSON.stringify(body) : undefined,
     });
   }catch(e){
@@ -348,6 +353,15 @@ $('btnSign').onclick = async () => {
 
 renderMeters();
 fetch('session.json').then(r=>r.json()).then(cfg=>{
+  /* A session minted before the console moved to key-auth has no apiKey. Say so
+     here: without this the console loads, looks entirely healthy, and every
+     call returns a bare 401 from the gateway with nothing naming the cause. */
+  if (!cfg.apiKey){
+    $('setup').style.display='block';
+    $('setupMsg').innerHTML = `<b>Session has no API key.</b><br>This console authenticates with <span style="font-family:var(--mono)">X-API-Key</span>. Set <span style="font-family:var(--mono)">ICICI_API_KEY</span> in <span style="font-family:var(--mono)">.env</span> and re-run <span style="font-family:var(--mono)">node scripts/generate-session.js</span>. Every call would otherwise return 401.`;
+    $('who').textContent='session missing api key';
+    return;
+  }
   S.cfg=cfg;
   $('who').textContent = `customer ${cfg.customerId} · gateway ${cfg.gatewayUrl}`;
 }).catch(()=>{

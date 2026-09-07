@@ -33,6 +33,11 @@ const env = (k, d) => process.env[k] || dotenv[k] || d;
 
 const CONFIG = {
   gatewayUrl: env('PROTEAN_GATEWAY_URL', 'http://localhost:8000'),
+  // The credential the console actually authenticates with. The gateway's
+  // key-auth plugin reads X-API-Key; the RS256 token minted below is a separate
+  // path (the metering plugin's jwt_validation_enabled mode) and is not what
+  // this deployment checks.
+  apiKey: env('ICICI_API_KEY', 'REPLACE_WITH_API_KEY'),
   customerId: env('ICICI_CUSTOMER_ID', 'REPLACE_WITH_CUSTOMER_ID'),
   keyId: env('ICICI_KEY_ID', 'REPLACE_WITH_KEY_ID'),
   tenantId: env('PROTEAN_TENANT_ID', 'protean'),
@@ -51,8 +56,13 @@ if (missing.length) {
   for (const k of missing) console.error(`  ${k}`);
   console.error(`
 Copy .env.example to .env and fill in the identity Protean issued to ICICI:
+  ICICI_API_KEY      the sk_live_... key the console sends as X-API-Key
   ICICI_CUSTOMER_ID  the customer id from Protean's Aforo workspace
   ICICI_KEY_ID       the keyId of the API key bound to ICICI's subscription
+
+Also set PROTEAN_GATEWAY_URL to the public gateway. It defaults to
+http://localhost:8000, which from a hosted page means the visitor's own
+machine -- and an https page blocks the plain-http call outright.
 `);
   process.exit(1);
 }
@@ -84,7 +94,13 @@ const signingInput = `${b64url(JSON.stringify(header))}.${b64url(JSON.stringify(
 const token = `${signingInput}.${b64url(crypto.sign('sha256', Buffer.from(signingInput), privateKey))}`;
 
 fs.writeFileSync(path.join(ROOT, 'public', 'session.json'),
-  JSON.stringify({ token, gatewayUrl: CONFIG.gatewayUrl, customerId: CONFIG.customerId, expiresAt: claims.exp }, null, 2));
+  JSON.stringify({
+    apiKey: CONFIG.apiKey,
+    token,
+    gatewayUrl: CONFIG.gatewayUrl,
+    customerId: CONFIG.customerId,
+    expiresAt: claims.exp,
+  }, null, 2));
 fs.writeFileSync(path.join(ROOT, 'protean-gateway-public-key.pem'), publicKey);
 
 console.log('Wrote public/session.json and protean-gateway-public-key.pem\n');
