@@ -32,12 +32,12 @@ const dotenv = loadDotEnv();
 const env = (k, d) => process.env[k] || dotenv[k] || d;
 
 const CONFIG = {
-  gatewayUrl: env('PROTEAN_GATEWAY_URL', 'http://localhost:8000'),
-  // The credential the console actually authenticates with. The gateway's
-  // key-auth plugin reads X-API-Key; the RS256 token minted below is a separate
-  // path (the metering plugin's jwt_validation_enabled mode) and is not what
-  // this deployment checks.
-  apiKey: env('ICICI_API_KEY', 'REPLACE_WITH_API_KEY'),
+  gatewayUrl: env('CONSOLE_API_BASE', '/api/gw'),
+  // No apiKey here by design. The credential is attached server-side by
+  // api/gw/[...path].js from the ICICI_API_KEY environment variable. Writing it
+  // into session.json would publish it: the file is served to every visitor, so
+  // the key would be readable by anyone who opened the console -- and it bills
+  // ICICI. Build-time injection does not help; the browser still receives it.
   customerId: env('ICICI_CUSTOMER_ID', 'REPLACE_WITH_CUSTOMER_ID'),
   keyId: env('ICICI_KEY_ID', 'REPLACE_WITH_KEY_ID'),
   tenantId: env('PROTEAN_TENANT_ID', 'protean'),
@@ -56,13 +56,13 @@ if (missing.length) {
   for (const k of missing) console.error(`  ${k}`);
   console.error(`
 Copy .env.example to .env and fill in the identity Protean issued to ICICI:
-  ICICI_API_KEY      the sk_live_... key the console sends as X-API-Key
   ICICI_CUSTOMER_ID  the customer id from Protean's Aforo workspace
   ICICI_KEY_ID       the keyId of the API key bound to ICICI's subscription
 
-Also set PROTEAN_GATEWAY_URL to the public gateway. It defaults to
-http://localhost:8000, which from a hosted page means the visitor's own
-machine -- and an https page blocks the plain-http call outright.
+The gateway URL is NOT set here any more. The console calls /api/gw on its own
+origin and the serverless function forwards to the gateway, so the destination
+is configured where the credential is -- PROTEAN_GATEWAY_URL in the Vercel
+project environment, never in this file.
 `);
   process.exit(1);
 }
@@ -95,7 +95,6 @@ const token = `${signingInput}.${b64url(crypto.sign('sha256', Buffer.from(signin
 
 fs.writeFileSync(path.join(ROOT, 'public', 'session.json'),
   JSON.stringify({
-    apiKey: CONFIG.apiKey,
     token,
     gatewayUrl: CONFIG.gatewayUrl,
     customerId: CONFIG.customerId,

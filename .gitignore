@@ -1,4 +1,8 @@
 .env
-public/session.json
+# public/session.json is intentionally NOT ignored any more. It no longer
+# carries a credential -- the API key moved to a Vercel environment variable
+# read only by api/gw/[...path].js -- and a static site has no build step, so
+# the file has to be in the repo for the page to boot. If a session.json ever
+# contains an apiKey again, that is a bug: the console refuses to run on one.
 protean-gateway-public-key.pem
 *.log
