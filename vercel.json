@@ -1,22 +1,8 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
-
-  "_comment": [
-    "Explicit builds, not zero-config. The static files live in public/ (nginx",
-    "serves that directory locally too), and the earlier 'outputDirectory':",
-    "'public' made Vercel treat the project as static-only: session.json was",
-    "served correctly while every function under api/ 404'd with no build error",
-    "anywhere. Declaring both builds is what gets the proxy deployed at all.",
-    "",
-    "routes are ordered and first-match-wins, so the api rule has to precede the",
-    "catch-all or /api/gw/... would be looked up as a static file under public/."
-  ],
-
   "builds": [
     { "src": "api/**/*.js", "use": "@vercel/node" },
     { "src": "public/**", "use": "@vercel/static" }
   ],
-
   "routes": [
     { "src": "/api/gw/(.*)", "dest": "/api/gw/[...path].js" },
     {
