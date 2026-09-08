@@ -50,16 +50,22 @@ module.exports = async function handler(req, res) {
     });
   }
 
-  const segments = Array.isArray(req.query.path) ? req.query.path : [req.query.path];
-  const path = '/' + segments.join('/');
+  // Derive the path from the URL rather than req.query.path. The [...path]
+  // segment is only populated by Vercel's filesystem routing; when vercel.json
+  // sends the request here through an explicit `routes` dest, req.query.path is
+  // empty and every call is rejected as "Not a proxied route: POST /". Parsing
+  // the URL works under both, so routing config cannot silently break this.
+  const full = req.url || '/';
+  const qIndex = full.indexOf('?');
+  const pathname = qIndex === -1 ? full : full.slice(0, qIndex);
+  const qs = qIndex === -1 ? '' : full.slice(qIndex);
+
+  const path = pathname.replace(/^\/api\/gw/, '') || '/';
   const route = `${req.method} ${path}`;
 
   if (!ALLOWED.has(route)) {
     return res.status(404).json({ message: `Not a proxied route: ${route}` });
   }
-
-  // Preserve the query string — /digilocker/v1/documents needs ?aadhaar=...
-  const qs = req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '';
 
   let upstream;
   try {
